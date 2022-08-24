@@ -33,7 +33,11 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 3- from forms import RegistrationForm, LoginForm
 
-4- 写完注册表格3）后，检验输入是否准确，上面importflash
+after 3) 4- 写完注册表格3）后，检验输入是否准确，上面importflash 
+line36.
+kibd of alart,但他有两个属性，还可以 成功！
+
+紧随其后是返回主页面.32行记得补上 methods=["GET", "POST"]
 
 
 3) register.html
