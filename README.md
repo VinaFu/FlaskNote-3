@@ -29,39 +29,11 @@
           password = PasswordField("Password", validators=[DataRequired()])
           remember = BooleanField("Remember me")
           submit = SubmitField("Login")
-              §
-
-
-2) flaskblog.py
-
-1- add secret key?
+              
 
 
 
-2- && ternimal:
-vinafu@Vinas-MacBook-Pro Flask_Blog % python3
-Python 3.10.6 (v3.10.6:9c7b4bd164, Aug  1 2022, 17:13:48) [Clang 13.0.0 (clang-1300.0.29.30)] on darwin
-Type "help", "copyright", "credits" or "license" for more information.
->>> import secrets
->>> secrets.token_hex(16)
-'819d9ba658d1a3bcf9977c8a876c8b96'
-
-
-3- from forms import RegistrationForm, LoginForm
-
-after 3) 4- 写完注册表格3）后，检验输入是否准确，上面importflash 
-line36.
-kibd of alart,但他有两个属性，还可以 成功！
-
-紧随其后是返回主页面.32行记得补上 methods=["GET", "POST"]
-
-
-
-3) register.html
-
-
-8. 新打一个是否有账户？ 这边引用网页用：a href="{{ url_for('login') }}
-9.  layout给了register一个flash：相当于alert，成功的话就返回/redirect到另一个网站。
+2) register.html
 
                     详解：https://flask.palletsprojects.com/en/2.2.x/patterns/wtforms/ 套路式模版
                     中文版：https://dormousehole.readthedocs.io/en/latest/patterns/wtforms.html
@@ -124,7 +96,8 @@ kibd of alart,但他有两个属性，还可以 成功！
             其他tips：                 
             -     render 渲染； template 模版
             -     legend 元素为 fieldset 元素定义标题（caption）
-            -     
+            -     a href="{{ url_for('login') }}" 用这个来引用网页。
+            -     flash：相当于alert，成功的话就返回/redirect到另一个网站。但他有两个选项。
             -     <dl>
                   <dt>标题</dt>
                   <dd>内容1</dd>
@@ -134,8 +107,51 @@ kibd of alart,但他有两个属性，还可以 成功！
                   dt —— define list title —— 用于生成定义列表中各列表项的标题，重复使用可以定义多个列表项的标题。注意：其中不能包含 hx 元素。
                   dd —— define list define —— 用于生成定义列表各列表项的说明文字段，重复使用可以定义多个说明文字段。dd是对应dt的简短说明或解释。
 
+
+
+2) flaskblog.py
+
+            因为有重新换页面，所以flask部分增加：flash 和 redirect
+            因为有新表格：from forms import RegistrationForm, LoginForm
+
+            1. app.config["SECRET_KEY"]  是在干嘛 + 密码从terminal里面找出来
+         && ternimal:
+            vinafu@Vinas-MacBook-Pro Flask_Blog % python3
+            Python 3.10.6 (v3.10.6:9c7b4bd164, Aug  1 2022, 17:13:48) [Clang 13.0.0 (clang-1300.0.29.30)] on darwin
+            Type "help", "copyright", "credits" or "license" for more information.
+            >>> import secrets
+            >>> secrets.token_hex(16)
+            '819d9ba658d1a3bcf9977c8a876c8b96'
+
+     内部增加：
+            编辑route，多加一个网页就要加一个“/register”
+            同时还要注意加上 GET，POST 这两个methods：
+            
+            @app.route("/register", methods=["GET", "POST"])
+            def register ():
+                form = RegistrationForm()
+                if form.validate_on_submit():
+                    flash(f"Account created for {form.username.data}!","success")
+                    return redirect(url_for('home')) 
+                    // 这个return是输入成功就返回主页面
+                return render_template('register.html',title="Register", form=form)
+                // 这个return是页面渲染，外观的。
+
+            @app.route("/login", methods=["GET", "POST"])
+            def login ():
+                form = LoginForm()
+                if form.validate_on_submit():
+                    if form.email.data == "admin@blog.com" and form.password.data == "password":
+                        flash("You have been logged in!", "success")
+                        return redirect(url_for('home'))
+                    else:
+                        flash("Login Unsuccessful. Please check username and password", "danger")
+                return render_template('login.html',title="Login", form=form)
+
+
 4) login.html
-
-
+  
+  基本上复制register内容即可。主要要的项，以及flash回哪里？
+  多一个check。
 
 
